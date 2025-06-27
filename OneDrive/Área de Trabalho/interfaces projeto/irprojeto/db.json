@@ -1,0 +1,28 @@
+{
+  "modelos": [
+    {
+      "nome": "Ronaldo",
+      "nota": 100,
+      "ativo": false,
+      "id": "5495"
+    },
+    {
+      "id": "1234",
+      "nome": "Bruno Henrique",
+      "nota": 9,
+      "ativo": true
+    },
+    {
+      "nome": "Messi",
+      "nota": 100,
+      "ativo": true,
+      "id": "6999"
+    },
+    {
+      "id": "8378",
+      "nome": "Neymar",
+      "nota": 1000,
+      "ativo": true
+    }
+  ]
+}
