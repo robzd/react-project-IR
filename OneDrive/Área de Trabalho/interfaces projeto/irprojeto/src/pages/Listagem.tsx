@@ -12,7 +12,9 @@ import {
 import { Link } from "react-router-dom";
 
 export default function Listagem() {
+  
   const [items, setItems] = useState<Jogador[]>([]);
+
   useEffect(() => {
     listar().then((res) => setItems(res.data));
   }, []);

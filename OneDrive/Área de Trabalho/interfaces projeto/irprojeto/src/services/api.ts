@@ -9,3 +9,5 @@ export const atualizar = (id: string, data: Omit<Jogador, 'id'>) =>
 export const detalhar = (id: string) => api.get<Jogador>(`/modelos/${id}`);
 export const remover = (id: string) => api.delete<void>(`/modelos/${id}`);
 export const listar = () => api.get<Jogador[]>('/modelos');
+
+// Alterar services
