@@ -12,6 +12,7 @@ export default function Formulario() {
     nome: "",
     nota: 0,
     ativo: false,
+    foto: undefined,
   });
 
   useEffect(() => {
@@ -32,52 +33,66 @@ export default function Formulario() {
   };
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        handleSubmit();
-      }}
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        gap: "16px",
-      }}
-    >
-      <TextField
-        label="Nome"
-        value={form.nome}
-        onChange={(e) => setForm({ ...form, nome: e.target.value })}
-        style={{ marginTop: "25px" }}
-      />
-      <TextField
-        label="Nota"
-        type="number"
-        value={form.nota}
-        onChange={(e) => setForm({ ...form, nota: +e.target.value })}
-        style={{ marginTop: "25px" }}
-      />
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={form.ativo}
-            onChange={(e) => setForm({ ...form, ativo: e.target.checked })}
-          />
-        }
-        label="Ativo"
-        sx={{
-          display: "flex",
-          alignItems: "center", // alinha checkbox + label no meio da linha
-          mt: 3, // margem-top equivalente a 24px (3 * 8px)
+    <div style={{ padding: "15px", alignItems: "center" }}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit();
         }}
-      />
-      <Button
-        type="submit"
-        variant="contained"
-        style={{ marginTop: "25px", height: "56px" }}
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          gap: "16px",
+        }}
       >
-        {isEdit ? "Atualizar" : "Inserir"}
-      </Button>
-    </form>
+        <TextField
+          label="Nome"
+          value={form.nome}
+          onChange={(e) => setForm({ ...form, nome: e.target.value })}
+        />
+        <TextField
+          label="Nota"
+          type="number"
+          value={form.nota}
+          onChange={(e) => setForm({ ...form, nota: +e.target.value })}
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={form.ativo}
+              onChange={(e) => setForm({ ...form, ativo: e.target.checked })}
+            />
+          }
+          label="Ativo"
+        />
+        <Button
+          component="label"
+          variant="contained"
+          size="medium"
+          color="secondary"
+        >
+          Upar Foto
+          <input
+            type="file"
+            hidden
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (!file) return;
+              const reader = new FileReader();
+              reader.onload = () => {
+                setForm({ ...form, foto: reader.result as string });
+              };
+              reader.readAsDataURL(file);
+            }}
+          />
+        </Button>
+
+        <Button type="submit" variant="contained" size="large">
+          {isEdit ? "Atualizar" : "Inserir"}
+        </Button>
+      </form>
+    </div>
   );
 }

@@ -18,7 +18,7 @@ export default function Detalhe() {
       <CardContent>
         <Typography>Nome: {item.nome}</Typography>
         <Typography>Valor: {item.nota}</Typography>
-        <Typography>Ativo: {item.ativo ? "Sim" : "Não"}</Typography>
+        <Typography>Ativo: {item.ativo ? "sim" : "nao"}</Typography>
       </CardContent>
     </Card>
   );

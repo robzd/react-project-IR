@@ -3,5 +3,6 @@ export interface Jogador {
     nome: string;
     nota: number;
     ativo: boolean;
+    foto?: string;
   }
   
