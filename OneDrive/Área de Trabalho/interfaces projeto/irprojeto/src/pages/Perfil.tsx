@@ -15,6 +15,7 @@ export default function Perfil() {
   if (!item) return <div>Carregando…</div>;
   return (
     <div style={{ padding: "15px" }}>
+      <h2>{item.nome}</h2>
       <Box
         component="img"
         style={{ width: 500, height: 500, objectFit: "cover" }}
