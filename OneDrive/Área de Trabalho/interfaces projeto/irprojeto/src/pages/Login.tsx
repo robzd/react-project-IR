@@ -5,7 +5,8 @@ import { useAuth } from "../provider/authProvider";
 import axios from "axios";
 
 const Login: React.FC = () => {
-  const { setToken } = useAuth();
+  const { setToken, setAuthUsername } = useAuth();
+
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
@@ -30,6 +31,7 @@ const Login: React.FC = () => {
         // geramos um token dummy:
         const token = `token-${username}-${Date.now()}`;
         setToken(token);
+        setAuthUsername(username);
         navigate("/", { replace: true });
       } else {
         setError("Usuário ou senha inválidos");

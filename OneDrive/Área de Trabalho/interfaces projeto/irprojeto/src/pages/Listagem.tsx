@@ -11,10 +11,13 @@ import {
   Button,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import { useAuth } from "../provider/authProvider";
 
 export default function Listagem() {
   const [jogadores, setJogadores] = useState<Jogador[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const { username } = useAuth();
 
   useEffect(() => {
     listar().then((res) => setJogadores(res.data));
@@ -40,6 +43,7 @@ export default function Listagem() {
   return (
     <div style={{ padding: "15px" }}>
       <div style={{ marginTop: "25px" }}>
+        <h3> Bem-vindo, {username} </h3>
         <TextField
           id="outlined-basic"
           label="Filtrar Jogador"

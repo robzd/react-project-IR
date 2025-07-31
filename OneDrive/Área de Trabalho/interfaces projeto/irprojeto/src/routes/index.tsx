@@ -26,6 +26,9 @@ const Layout: React.FC = () => (
   >
     <nav style={{ padding: "15px" }}>
       <a href="/">Listagem</a> | <a href="/novo">Novo</a>
+      <a href="/login" style={{ float: "right" }}>
+        Logout
+      </a>
     </nav>
     <Outlet />
   </div>
@@ -35,9 +38,9 @@ const Routes: React.FC = () => {
   const { token } = useAuth();
 
   // Rotas públicas
-  const routesForPublic  = [
+  const routesForPublic = [
     { path: "/detalhe/:id", element: <Detalhe /> },
-    { path: "/perfil/:id",  element: <Perfil /> },
+    { path: "/perfil/:id", element: <Perfil /> },
   ];
 
   // Rotas só para NÃO autenticados
@@ -51,9 +54,9 @@ const Routes: React.FC = () => {
       path: "/",
       element: <ProtectedRoute />, // checa token e devolve <Outlet/>
       children: [
-        { index: true,               element: <Listagem /> },      // “/”
-        { path: "novo",              element: <Formulario /> },    // “/novo”
-        { path: "editar/:id",        element: <Formulario /> },    // “/editar/:id”
+        { index: true, element: <Listagem /> }, // “/”
+        { path: "novo", element: <Formulario /> }, // “/novo”
+        { path: "editar/:id", element: <Formulario /> }, // “/editar/:id”
       ],
     },
   ];
@@ -64,12 +67,14 @@ const Routes: React.FC = () => {
       children: [
         ...routesForPublic,
         ...(!token ? routesForNotAuthenticatedOnly : []),
-        ...( token ? routesForAuthenticatedOnly : []),
+        ...(token ? routesForAuthenticatedOnly : []),
         {
           path: "*",
-          element: token
-            ? <Navigate to="/"    replace />
-            : <Navigate to="/login" replace />,
+          element: token ? (
+            <Navigate to="/" replace />
+          ) : (
+            <Navigate to="/login" replace />
+          ),
         },
       ],
     },
