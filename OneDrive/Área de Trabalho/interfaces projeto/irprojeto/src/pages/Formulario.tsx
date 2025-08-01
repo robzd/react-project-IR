@@ -1,80 +1,92 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import { inserir, detalhar, atualizar } from "../services/api";
 import { Jogador } from "../models/jogador";
-import { TextField, Checkbox, Button, FormControlLabel } from "@mui/material";
+import { TextField, Checkbox, Button, FormControlLabel, Box } from "@mui/material";
 import { NavBar } from "./NavBar";
+
+type FormData = Omit<Jogador, "id">;
 
 export default function Formulario() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const isEdit = Boolean(id);
-  const [form, setForm] = useState<Omit<Jogador, "id">>({
-    nome: "",
-    nota: 0,
-    ativo: false,
-    foto: undefined,
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<FormData>({
+    defaultValues: { nome: " ", nota: 0, ativo: false, foto: undefined },
   });
 
   useEffect(() => {
     if (isEdit && id) {
       detalhar(id).then((res) => {
-        const { id: _, ...rest } = res.data;
-        setForm(rest);
+        const { id: _, ...data } = res.data;
+        reset(data);
       });
     }
-  }, [id, isEdit]);
+  }, [id, isEdit, reset]);
 
-  const handleSubmit = () => {
-    if (isEdit && id) {
-      atualizar(id, form).then(() => navigate("/")); // Remova o Number()
-    } else {
-      inserir(form).then(() => navigate("/"));
+  
+
+  const onSubmit = async (data: FormData) => {
+    try {
+      if (isEdit && id) {
+        await atualizar(id, data);
+      } else {
+        await inserir(data);
+      }
+      navigate("/");
+    } catch (err) {
+      setError("nome", { type: "manual", message: "Erro ao salvar dados" });
     }
   };
 
+  const fotoValue = watch("foto");
+
   return (
-    <div style={{ padding: "15px", alignItems: "center" }}>
+    <Box p={3}>
       <NavBar />
-      <div style={{ marginTop: "25px" }}></div>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleSubmit();
-        }}
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          gap: "16px",
-        }}
-      >
+      <Box mt={4} component="form" onSubmit={handleSubmit(onSubmit)} sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+
         <TextField
           label="Nome"
-          value={form.nome}
-          onChange={(e) => setForm({ ...form, nome: e.target.value })}
+          {...register("nome", { 
+            required: "Nome é obrigatório",
+            minLength: {
+              value: 4,
+              message: "Mínimo 4 caracteres",
+            },
+          })}
+          error={!!errors.nome}
+          helperText={errors.nome?.message}
         />
+
         <TextField
           label="Nota"
           type="number"
-          value={form.nota}
-          onChange={(e) => setForm({ ...form, nota: +e.target.value })}
+          {...register("nota", {
+            required: "Nota é obrigatória",
+            min: { value: 0, message: "Mínimo 0" },
+            max: { value: 100, message: "Máximo 100" },
+          })}
+          error={!!errors.nota}
+          helperText={errors.nota?.message}
         />
+
         <FormControlLabel
-          control={
-            <Checkbox
-              checked={form.ativo}
-              onChange={(e) => setForm({ ...form, ativo: e.target.checked })}
-            />
-          }
+          control={<Checkbox {...register("ativo")} checked={watch("ativo")} />}
           label="Ativo"
         />
-        <Button
-          component="label"
-          variant="contained"
-          size="medium"
-          color="secondary"
-        >
+
+        <Button component="label" variant="contained" color="secondary">
           Upar Foto
           <input
             type="file"
@@ -84,18 +96,25 @@ export default function Formulario() {
               const file = e.target.files?.[0];
               if (!file) return;
               const reader = new FileReader();
-              reader.onload = () => {
-                setForm({ ...form, foto: reader.result as string });
-              };
+              reader.onload = () => setValue("foto", reader.result as string);
               reader.readAsDataURL(file);
             }}
           />
         </Button>
 
-        <Button type="submit" variant="contained" size="large">
+        {fotoValue && (
+          <Box
+            component="img"
+            src={fotoValue}
+            alt="preview"
+            sx={{ width: 56, height: 56, borderRadius: '50%' }}
+          />
+        )}
+
+        <Button type="submit" variant="contained" size="large" disabled={isSubmitting}>
           {isEdit ? "Atualizar" : "Inserir"}
         </Button>
-      </form>
-    </div>
+      </Box>
+    </Box>
   );
 }
