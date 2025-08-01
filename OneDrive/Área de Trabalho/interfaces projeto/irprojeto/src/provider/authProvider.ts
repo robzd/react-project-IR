@@ -13,7 +13,7 @@ interface AuthContextType {
   token: string | null;
   setToken: (token: string | null) => void;
   username: string | null;
-  setAuthUsername: (username: string) => void;
+  setAuthUsername: (username: string | null) => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -34,6 +34,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const setToken = (newToken: string | null) => {
     setToken_(newToken);
   };
+
   const [username, setAuthUsername_] = useState<string | null>(
     localStorage.getItem("username interfaces")
   );
@@ -53,9 +54,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     if (username) {
-      localStorage.setItem("username_interfaces", username);
+      localStorage.setItem("username interfaces", username);
     } else {
-      localStorage.removeItem("username_interfaces");
+      localStorage.removeItem("username interfaces");
     }
   }, [username]);
 

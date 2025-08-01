@@ -14,6 +14,7 @@ import Detalhe from "../pages/Detalhe";
 import Perfil from "../pages/Perfil";
 import Formulario from "../pages/Formulario";
 import Login from "../pages/Login";
+import Logout from "../pages/Logout";
 import wallp from "../assets/wallp2.jpg";
 
 const Layout: React.FC = () => (
@@ -24,12 +25,7 @@ const Layout: React.FC = () => (
       backgroundSize: "cover",
     }}
   >
-    <nav style={{ padding: "15px" }}>
-      <a href="/">Listagem</a> | <a href="/novo">Novo</a>
-      <a href="/login" style={{ float: "right" }}>
-        Logout
-      </a>
-    </nav>
+
     <Outlet />
   </div>
 );

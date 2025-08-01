@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { perfil } from "../services/api";
 import { Jogador } from "../models/jogador";
 import { Box } from "@mui/material";
+import { NavBar } from "./NavBar";
 
 export default function Perfil() {
   const { id } = useParams<{ id: string }>();
@@ -15,6 +16,7 @@ export default function Perfil() {
   if (!item) return <div>Carregando…</div>;
   return (
     <div style={{ padding: "15px" }}>
+      <NavBar />
       <h2>{item.nome}</h2>
       <Box
         component="img"

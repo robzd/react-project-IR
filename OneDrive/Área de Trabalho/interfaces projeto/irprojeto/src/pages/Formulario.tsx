@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { inserir, detalhar, atualizar } from "../services/api";
 import { Jogador } from "../models/jogador";
 import { TextField, Checkbox, Button, FormControlLabel } from "@mui/material";
+import { NavBar } from "./NavBar";
 
 export default function Formulario() {
   const { id } = useParams<{ id: string }>();
@@ -34,6 +35,8 @@ export default function Formulario() {
 
   return (
     <div style={{ padding: "15px", alignItems: "center" }}>
+      <NavBar />
+      <div style={{ marginTop: "25px" }}></div>
       <form
         onSubmit={(e) => {
           e.preventDefault();

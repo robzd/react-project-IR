@@ -4,21 +4,20 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
 
 const Logout: React.FC = () => {
-  const { setToken } = useAuth();
+  const { setToken, setAuthUsername } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Para “deslogar”, limpamos o token
     setToken(null);
+    setAuthUsername(null);
     navigate("/", { replace: true });
   };
 
-  useEffect(() => {
-    const timer = setTimeout(handleLogout, 3 * 1000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  return <>Logout Page</>;
+  return (
+    <button onClick={handleLogout}>
+      Logout
+    </button>
+  );
 };
 
 export default Logout;

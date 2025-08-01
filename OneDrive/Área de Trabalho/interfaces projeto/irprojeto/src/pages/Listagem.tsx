@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { listar, remover } from "../services/api";
 import { Jogador } from "../models/jogador";
+import { NavBar } from "./NavBar";
 import {
   Table,
   TableBody,
@@ -42,6 +43,7 @@ export default function Listagem() {
 
   return (
     <div style={{ padding: "15px" }}>
+      <NavBar />
       <div style={{ marginTop: "25px" }}>
         <h3> Bem-vindo, {username} </h3>
         <TextField

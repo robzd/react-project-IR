@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { detalhar } from "../services/api";
 import { Jogador } from "../models/jogador";
 import { Card, CardContent, Typography } from "@mui/material";
+import { NavBar } from "./NavBar";
 
 export default function Detalhe() {
   const { id } = useParams<{ id: string }>();
@@ -14,12 +15,15 @@ export default function Detalhe() {
 
   if (!item) return <div>Carregando…</div>;
   return (
-    <Card>
-      <CardContent>
-        <Typography>Nome: {item.nome}</Typography>
-        <Typography>Valor: {item.nota}</Typography>
-        <Typography>Ativo: {item.ativo ? "sim" : "nao"}</Typography>
-      </CardContent>
-    </Card>
+    <div>
+      <NavBar />
+      <Card>
+        <CardContent>
+          <Typography>Nome: {item.nome}</Typography>
+          <Typography>Valor: {item.nota}</Typography>
+          <Typography>Ativo: {item.ativo ? "sim" : "nao"}</Typography>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
