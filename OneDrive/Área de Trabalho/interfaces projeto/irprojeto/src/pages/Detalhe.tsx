@@ -10,7 +10,7 @@ export default function Detalhe() {
   const [item, setItem] = useState<Jogador | null>(null);
 
   useEffect(() => {
-    detalhar(String(id)).then((res) => setItem(res.data));
+    detalhar(String(id)).then((res) => setItem(res.data)); 
   }, [id]);
 
   if (!item) return <div>Carregando…</div>;
