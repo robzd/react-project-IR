@@ -24,7 +24,6 @@ const Layout: React.FC = () => (
       backgroundSize: "cover",
     }}
   >
-
     <Outlet />
   </div>
 );
@@ -32,26 +31,22 @@ const Layout: React.FC = () => (
 const Routes: React.FC = () => {
   const { token } = useAuth();
 
-  // Rotas públicas
-  const routesForPublic = [
-    { path: "/detalhe/:id", element: <Detalhe /> },
-    { path: "/perfil/:id", element: <Perfil /> },
-  ];
-
   // Rotas só para NÃO autenticados
-  const routesForNotAuthenticatedOnly = [
+  const rotasNaoAutenticado = [
     { path: "/login", element: <Login /> },
   ];
 
   // Rotas só para autenticados
-  const routesForAuthenticatedOnly = [
+  const rotasAutenticado = [
     {
       path: "/",
       element: <ProtectedRoute />, // checa token e devolve <Outlet/>
       children: [
-        { index: true, element: <Listagem /> }, // “/”
-        { path: "novo", element: <Formulario /> }, // “/novo”
-        { path: "editar/:id", element: <Formulario /> }, // “/editar/:id”
+        { index: true, element: <Listagem /> },
+        { path: "novo", element: <Formulario /> },
+        { path: "editar/:id", element: <Formulario /> },
+        { path: "detalhe/:id", element: <Detalhe /> },
+        { path: "perfil/:id", element: <Perfil /> },
       ],
     },
   ];
@@ -60,16 +55,11 @@ const Routes: React.FC = () => {
     {
       element: <Layout />,
       children: [
-        ...routesForPublic,
-        ...(!token ? routesForNotAuthenticatedOnly : []),
-        ...(token ? routesForAuthenticatedOnly : []),
+        ...(!token ? rotasNaoAutenticado : []),
+        ...(token ? rotasAutenticado : []),
         {
           path: "*",
-          element: token ? (
-            <Navigate to="/" replace />
-          ) : (
-            <Navigate to="/login" replace />
-          ),
+          element: <Navigate to="/login" replace />
         },
       ],
     },

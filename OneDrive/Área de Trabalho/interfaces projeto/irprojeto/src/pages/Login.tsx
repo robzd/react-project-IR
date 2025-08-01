@@ -31,7 +31,7 @@ const Login: React.FC = () => {
       });
 
       if (resp.data.length === 1) {
-        // Autenticação bem-sucedida
+        // Login / Autenticação bem-sucedida
         const token = `token-${data.username}`;
         setToken(token);
         setAuthUsername(data.username);
@@ -100,7 +100,7 @@ const Login: React.FC = () => {
                 message: "Mínimo 4 caracteres",
               },
             })}
-            style={{ width: "100%" }} 
+            style={{ width: "100%" }}
           />
         </label>
         {errors.password && (
