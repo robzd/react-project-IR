@@ -100,7 +100,7 @@ const Login: React.FC = () => {
                 message: "Mínimo 4 caracteres",
               },
             })}
-            style={{ width: "100%" }}
+            style={{ width: "100%" }} 
           />
         </label>
         {errors.password && (
