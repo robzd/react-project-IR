@@ -1,52 +1,59 @@
-// src/routes/Login.tsx
-import React, { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/authProvider";
 import axios from "axios";
+import { useForm } from "react-hook-form";
+
+type LoginFormData = {
+  username: string;
+  password: string;
+};
 
 const Login: React.FC = () => {
   const { setToken, setAuthUsername } = useAuth();
-
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  // Configuração do react-hook-form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setError: setFormError,
+  } = useForm<LoginFormData>();
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-
+  const onSubmit = async (data: LoginFormData) => {
     try {
       const resp = await axios.get("/users", {
         baseURL: "http://localhost:3001",
-        params: { username, password },
+        params: {
+          username: data.username,
+          password: data.password,
+        },
       });
 
       if (resp.data.length === 1) {
-        // Encontrou usuário
-        // Você poderia usar um JWT vindo do servidor, mas aqui
-        // geramos um token dummy:
-        const token = `token-${username}-${Date.now()}`;
+        // Autenticação bem-sucedida
+        const token = `token-${data.username}`;
         setToken(token);
-        setAuthUsername(username);
+        setAuthUsername(data.username);
         navigate("/", { replace: true });
       } else {
-        setError("Usuário ou senha inválidos");
+        setFormError("root", {
+          type: "manual",
+          message: "Usuário ou senha inválidos",
+        });
       }
     } catch (err) {
       console.error(err);
-      setError("Erro ao conectar ao servidor");
-    } finally {
-      setLoading(false);
+      setFormError("root", {
+        type: "manual",
+        message: "Erro ao conectar ao servidor",
+      });
     }
   };
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       style={{
         maxWidth: 300,
         margin: "100px auto",
@@ -59,40 +66,63 @@ const Login: React.FC = () => {
 
       <div style={{ marginBottom: 10 }}>
         <label>
-          Usuário<br />
+          Usuário
+          <br />
           <input
             type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
+            {...register("username", {
+              required: "Usuário é obrigatório",
+              minLength: {
+                value: 3,
+                message: "Mínimo 3 caracteres",
+              },
+            })}
             style={{ width: "100%" }}
           />
         </label>
+        {errors.username && (
+          <div style={{ color: "red", fontSize: 12 }}>
+            {errors.username.message}
+          </div>
+        )}
       </div>
 
       <div style={{ marginBottom: 10 }}>
         <label>
-          Senha<br />
+          Senha
+          <br />
           <input
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
+            {...register("password", {
+              required: "Senha é obrigatória",
+              minLength: {
+                value: 4,
+                message: "Mínimo 4 caracteres",
+              },
+            })}
             style={{ width: "100%" }}
           />
         </label>
+        {errors.password && (
+          <div style={{ color: "red", fontSize: 12 }}>
+            {errors.password.message}
+          </div>
+        )}
       </div>
 
-      {error && (
-        <div style={{ color: "red", marginBottom: 10 }}>{error}</div>
+      {errors.root && (
+          //Usuário ou senha inválidos OU Erro ao conectar ao servidor
+        <div style={{ color: "red", marginBottom: 10 }}>
+          {errors.root.message} 
+        </div>
       )}
 
       <button
         type="submit"
-        disabled={loading}
+        disabled={isSubmitting}
         style={{ width: "100%", padding: "8px 0" }}
       >
-        {loading ? "Entrando..." : "Entrar"}
+        {isSubmitting ? "Entrando..." : "Entrar"}
       </button>
     </form>
   );
